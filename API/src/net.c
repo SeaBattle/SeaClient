@@ -14,7 +14,7 @@ short set_address(char *host, int port, struct sockaddr_in *sap)
 	sap->sin_family = AF_INET;
 	sap->sin_port = htons(port);	//задаём порт
 
-	if(inet_pton(AF_INET, host, sap->sin_addr)<=0)
+	if (inet_pton(AF_INET, host, &sap->sin_addr) <= 0)
 	{
 		printf("\n inet_pton error occured\n");
 		return -1;
@@ -63,49 +63,17 @@ int create_client_sock(char *host, int port)
 
 	if (connect(sock, (struct sockaddr *) &serv_addr, sizeof(serv_addr)))
 	{
-		perror("Err! Can't connect to host %s:%d!\n", host, port);
+		printf("Err! Can't connect to host %s:%d!\n", host, port);
 		return -1;
 	}
 
 	return sock;
 }
 
-//получает нового клиента
-int getNewClient(int *mainSocket)
+//отправляет пакет на сервер. Возвращает 0 в случае ошибки
+short sendPacket(Packet *packet, int socket)
 {
-	struct sockaddr_in client_sockaddr;
-	int sin_size = sizeof(struct sockaddr_in);
-
-	int sock = accept(*mainSocket, (struct sockaddr*) &client_sockaddr,
-	        (socklen_t*) &sin_size);
-	if (sock < 0)
-	{
-		printf("Err! Can't accept connection!\n");
-		return -1;
-	}
-	else
-	{
-		if (noblock(sock))	//делаем сокет неблокирующим (обязательно)
-			return sock;
-		else
-			return -1;
-	}
-}
-
-//получает данные от клиента. Возвращает NULL в случае ошибки
-char *getPacket(ClientStruct *client)
-{
-	int len = 65535;
-	char buf[len];
-	ssize_t recved;
-
-	recved = recv(client->socket, buf, len, 0);
-
-	if (recved < 0)
-	{
-		//free(buf);
-		return NULL;
-	}
-
-	return NULL;
+	ssize_t msgLen = sizeof(*packet);
+	ssize_t sent = send(socket, packet, msgLen, 0);
+	return msgLen != sent ? 0 : 1;
 }

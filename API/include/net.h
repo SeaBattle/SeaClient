@@ -25,18 +25,7 @@
 
 #include <stdio.h>
 
-#include "support.h"
-
-//протокол, по которому происходит подключение клиента
-typedef enum _Protocol
-{
-	TCP, UDP, HTTP
-} Protocol;
-
-#define NLISTEN 1000
-
-//заставляет сокет слушать
-short Listen(int, int);
+#include "main_packet.h"
 
 //настраивет порт/адрес/протокол сервера. Возвращает -1 в случае ошибки. 0 - если всё нормально.
 short set_address(char *, int, struct sockaddr_in *);
@@ -47,10 +36,7 @@ short noblock(int);
 //настраивает серверный сокет. Возвращает -1 в случае ошибки. Сокет - в другом случае.
 int create_client_sock(char *, int);
 
-//получает нового клиента
-int getNewClient(int *);
-
-//получает данные от клиента и парсит их. Возвращает NULL в случае ошибки
-char *getPacket(ClientStruct *client);
+//отправляет пакет на сервер. Возвращает 0 в случае ошибки
+short sendPacket(Packet *, int);
 
 #endif /* NET_H_ */
