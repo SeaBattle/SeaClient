@@ -20,6 +20,7 @@ typedef struct
 {
 		State state;
 		int socket;
+		short authorised;
 } Client;
 
 #endif /* CLIENT_H_ */

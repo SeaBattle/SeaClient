@@ -17,4 +17,8 @@ typedef struct {
 		char password[30];
 }PasswordAuth;
 
+typedef struct {
+		short success;
+}AuthResp;
+
 #endif /* AUTH_PACKETS_H_ */

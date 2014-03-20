@@ -10,11 +10,20 @@
 
 #include "auth_packets.h"
 
+typedef enum {
+	guestAuth = 1,
+	passwordAuth,
+	authResp
+}PacketType;
+
 typedef struct {
-		int header;
+		PacketType header;
+		int protocolVersion;
+		int apiVersion;
 		union {
 				GuestAuth guestPacket;
 				PasswordAuth loginPacket;
+				AuthResp authRespPacket;
 		};
 }Packet;
 

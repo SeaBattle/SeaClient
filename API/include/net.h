@@ -26,6 +26,7 @@
 #include <stdio.h>
 
 #include "main_packet.h"
+#include "seaclient_api.h"
 
 //настраивет порт/адрес/протокол сервера. Возвращает -1 в случае ошибки. 0 - если всё нормально.
 short set_address(char *, int, struct sockaddr_in *);
@@ -38,5 +39,8 @@ int create_client_sock(char *, int);
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
 short sendPacket(Packet *, int);
+
+//получает пакет от сервера. Возвращает 0 в случае ошибки
+short recvPacket(Packet *packet, int socket);
 
 #endif /* NET_H_ */

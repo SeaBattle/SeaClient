@@ -11,6 +11,7 @@
 short authorize(Client *client)
 {
 	Packet *authPacket = malloc(sizeof(Packet));
+	authPacket->header = guestAuth;
 	strcpy(authPacket->guestPacket.uid, "testUid");
 	if (!sendPacket(authPacket, client->socket))
 	{
@@ -21,7 +22,16 @@ short authorize(Client *client)
 	printf("No error\n");
 	free(authPacket);
 
-	//todo get responce
+	Packet *authResp = malloc(sizeof(Packet));
+	if(!recvPacket(authResp, client->socket))
+	{
+		printf("Receiving packet error!\n");
+		free(authResp);
+		return 0;
+	}
+	printf("No error\n");
+	free(authResp);
 
+	client->authorised = 1;
 	return 1;
 }
