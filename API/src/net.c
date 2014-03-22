@@ -71,23 +71,47 @@ int create_client_sock(char *host, int port)
 }
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(Packet *packet, int socket)
+short sendPacket(void *packet, ssize_t len, int socket)
 {
-	packet->apiVersion = API_VERSION;
-	packet->protocolVersion = PROTOCOL_VERSION;
-	ssize_t msgLen = sizeof(*packet);
-	ssize_t sent = send(socket, packet, msgLen, 0);	//TODO если пакет отправляется частями? Придумать байт буфер
-	return msgLen != sent ? 0 : 1;
+	char *buf = packet;
+
+	while (len > 0)
+	{
+		ssize_t written = send(socket, buf, len, 0);
+		if (written < 0) return 0;
+		len -= written;
+		buf += written;
+	}
+	return 1;
 }
 
-//получает пакет от сервера. Возвращает 0 в случае ошибки
-short recvPacket(Packet *packet, int socket)
+//получает пакет от сервера. Возвращает NULL в случае ошибки
+void *recvPacket(int socket)
 {
-//	PacketType header;
-//	ssize_t recieved = resv(socket, &header, sizeof(PacketType), 0);
-//	if(recieved < 0)
-//		return 0;
+	int size = 0;
+	if (recv(socket, &size, 512, 0) < 0) return 0;
 
-	ssize_t recieved = recv(socket, packet, sizeof(Packet), 0);	//TODO если пакет пришёл частями?
-	return recieved < 0? 0 : 1;
+	char *packet = malloc(size);
+
+	int readbytes = 0;
+	char buf[512];
+	ssize_t read = 0;
+	do
+	{
+		readbytes = recv(socket, buf, 512, 0);
+		if (readbytes < 0)	//ERROR
+		{
+			free(packet);
+		    return NULL;
+		}
+		if (readbytes >= 0)	//DATA | EOF
+		{
+			for (int i = 0; i < readbytes; i++)
+			{
+				*packet++ = buf[i];
+			}
+		}
+	} while (readbytes > 0);
+
+	return packet;
 }

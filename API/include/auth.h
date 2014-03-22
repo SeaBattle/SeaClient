@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "main_packet.h"
+#include "auth_packets.h"
 #include "client.h"
 #include "net.h"
 

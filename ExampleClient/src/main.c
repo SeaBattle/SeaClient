@@ -27,7 +27,11 @@ int main()
 		printf("Authorization error!\n");
 		//TODO handle auth fail here!
 	}
-	printf("Authorized.\n");
+
+	if(client->authorised)
+		printf("Authorized.\n");
+	else
+		printf("Not authorized!\n");
 
 	close(client->socket);
 	free(client);
