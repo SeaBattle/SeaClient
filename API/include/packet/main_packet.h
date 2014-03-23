@@ -11,23 +11,31 @@
 #define PROTOCOL_VERSION 1
 #define API_VERSION 1
 
-typedef enum {
-	errorPacket = 1,
-	guestAuth,
+#include "auth_packets.h"
+
+typedef enum
+{
+	guestAuth = 1,
 	passwordAuth,
 	authResp
-}PacketType;
+} PacketType;
 
-typedef struct {
+typedef struct
+{
 		PacketType type;
 		int protocolVersion;
 		int apiVersion;
-}PacketHeader;
+} PacketHeader;
 
-typedef struct {
-		PacketType type;
-		int protocolVersion;
-		short successfulResponce;
-}ServerHeader;
+typedef struct
+{
+		PacketHeader header;
+		union
+		{
+				GuestAuth guestPacket;
+				PasswordAuth loginPacket;
+				AuthResp authRespPacket;
+		};
+} Packet;
 
 #endif /* MAIN_PACKET_H_ */

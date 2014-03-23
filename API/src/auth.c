@@ -10,10 +10,12 @@
 
 short authorize(Client *client)
 {
-	GuestAuth *authPacket = malloc(sizeof(GuestAuth));
-	fillHeader(&authPacket->header, guestAuth);
-	strcpy(authPacket->uid, "testUid");
-	if (!sendPacket(authPacket, sizeof(GuestAuth), client->socket))
+	sleep(1);
+	ssize_t packetLen = sizeof(GuestAuth) + sizeof(PacketHeader);
+	Packet *authPacket = malloc(packetLen);
+	authPacket->header.type = guestAuth;
+	strcpy(authPacket->guestPacket.uid, "testUid");
+	if (!sendPacket(authPacket, packetLen, client->socket))
 	{
 		printf("Sending packet error!\n");
 		free(authPacket);
@@ -22,24 +24,16 @@ short authorize(Client *client)
 	printf("No error\n");
 	free(authPacket);
 
-	char *rawData = recvPacket(client->socket);
-	if(!rawData)
+	Packet *authResp = malloc(sizeof(Packet));
+	if(!recvPacket(authResp, client->socket))
 	{
 		printf("Receiving packet error!\n");
+		free(authResp);
 		return 0;
 	}
 	printf("No error\n");
+	free(authResp);
 
-	AuthResp *authRespPacket = malloc(sizeof(AuthResp));
-	memcpy(authRespPacket, rawData, sizeof(AuthResp));
-	free(rawData);
-
-	if(authRespPacket->header.type == authResp)
-	{
-
-		client->authorised = authRespPacket->success;
-	}
-
-	free(authRespPacket);
+	client->authorised = 1;
 	return 1;
 }

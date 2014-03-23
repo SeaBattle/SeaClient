@@ -71,47 +71,37 @@ int create_client_sock(char *host, int port)
 }
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(void *packet, ssize_t len, int socket)
+short sendPacket(Packet *packet, ssize_t len, int socket)
 {
-	char *buf = packet;
-
-	while (len > 0)
-	{
-		ssize_t written = send(socket, buf, len, 0);
-		if (written < 0) return 0;
-		len -= written;
-		buf += written;
-	}
-	return 1;
+	packet->header.apiVersion = API_VERSION;
+	packet->header.protocolVersion = PROTOCOL_VERSION;
+	ssize_t sent = send(socket, packet, len, 0);
+	return len != sent ? 0 : 1;
 }
 
-//получает пакет от сервера. Возвращает NULL в случае ошибки
-void *recvPacket(int socket)
+//получает пакет от сервера. Возвращает 0 в случае ошибки
+short recvPacket(Packet *packet, int socket)
 {
-	int size = 0;
-	if (recv(socket, &size, 512, 0) < 0) return 0;
-
-	char *packet = malloc(size);
-
 	int readbytes = 0;
-	char buf[512];
-	ssize_t read = 0;
+	char buf[sizeof(Packet)];
+	char *raw;
+	int rawSize = 0;
 	do
 	{
 		readbytes = recv(socket, buf, 512, 0);
 		if (readbytes < 0)	//ERROR
 		{
 			free(packet);
-		    return NULL;
+			return 0;
 		}
 		if (readbytes >= 0)	//DATA | EOF
 		{
+			raw = realloc(raw, rawSize + readbytes);
 			for (int i = 0; i < readbytes; i++)
-			{
-				*packet++ = buf[i];
-			}
+				raw[rawSize+i] = buf[i];
+			rawSize+= readbytes;
 		}
 	} while (readbytes > 0);
-
-	return packet;
+	memcpy(packet, raw, rawSize);
+	return 1;
 }
