@@ -92,6 +92,8 @@ short recvPacket(Packet *packet, int socket)
 		if (readbytes < 0)	//ERROR
 		{
 			free(packet);
+			if(raw)
+				free(raw);
 			return 0;
 		}
 		if (readbytes >= 0)	//DATA | EOF
@@ -103,5 +105,7 @@ short recvPacket(Packet *packet, int socket)
 		}
 	} while (readbytes > 0);
 	memcpy(packet, raw, rawSize);
+	if(raw)
+		free(raw);
 	return 1;
 }
