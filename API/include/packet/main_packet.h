@@ -8,23 +8,34 @@
 #ifndef MAIN_PACKET_H_
 #define MAIN_PACKET_H_
 
+#define PROTOCOL_VERSION 1
+#define API_VERSION 1
+
 #include "auth_packets.h"
 
-typedef enum {
+typedef enum
+{
 	guestAuth = 1,
 	passwordAuth,
 	authResp
-}PacketType;
+} PacketType;
 
-typedef struct {
-		PacketType header;
+typedef struct
+{
+		PacketType type;
 		int protocolVersion;
 		int apiVersion;
-		union {
+} PacketHeader;
+
+typedef struct
+{
+		PacketHeader header;
+		union
+		{
 				GuestAuth guestPacket;
 				PasswordAuth loginPacket;
 				AuthResp authRespPacket;
 		};
-}Packet;
+} Packet;
 
 #endif /* MAIN_PACKET_H_ */

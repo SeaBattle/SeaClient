@@ -10,10 +10,12 @@
 
 short authorize(Client *client)
 {
-	Packet *authPacket = malloc(sizeof(Packet));
-	authPacket->header = guestAuth;
+	sleep(1);
+	ssize_t packetLen = sizeof(GuestAuth) + sizeof(PacketHeader);
+	Packet *authPacket = malloc(packetLen);
+	authPacket->header.type = guestAuth;
 	strcpy(authPacket->guestPacket.uid, "testUid");
-	if (!sendPacket(authPacket, client->socket))
+	if (!sendPacket(authPacket, packetLen, client->socket))
 	{
 		printf("Sending packet error!\n");
 		free(authPacket);
