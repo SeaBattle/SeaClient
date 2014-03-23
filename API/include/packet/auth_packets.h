@@ -8,22 +8,17 @@
 #ifndef AUTH_PACKETS_H_
 #define AUTH_PACKETS_H_
 
-#include "main_packet.h"
-
 typedef struct {
-		PacketHeader header;
 		char uid[30];
 }GuestAuth;
 
 typedef struct {
-		PacketHeader header;
 		char login[30];
 		char password[30];
 }PasswordAuth;
 
 typedef struct {
-		ServerHeader header;
-		short success;
+		char success;
 }AuthResp;
 
 #endif /* AUTH_PACKETS_H_ */

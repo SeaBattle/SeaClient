@@ -71,7 +71,7 @@ int create_client_sock(char *host, int port)
 }
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(Packet *packet, ssize_t len, int socket)
+short sendPacket(RequestPacket *packet, ssize_t len, int socket)
 {
 	packet->header.apiVersion = API_VERSION;
 	packet->header.protocolVersion = PROTOCOL_VERSION;
@@ -80,32 +80,13 @@ short sendPacket(Packet *packet, ssize_t len, int socket)
 }
 
 //получает пакет от сервера. Возвращает 0 в случае ошибки
-short recvPacket(Packet *packet, int socket)
+short recvPacket(ResponsePacket *packet, int socket)
 {
-	int readbytes = 0;
-	char buf[sizeof(Packet)];
-	char *raw;
-	int rawSize = 0;
-	do
+	int readbytes = read(socket, packet, sizeof(ResponsePacket));
+	if(readbytes < 0)
 	{
-		readbytes = recv(socket, buf, 512, 0);
-		if (readbytes < 0)	//ERROR
-		{
-			free(packet);
-			if(raw)
-				free(raw);
-			return 0;
-		}
-		if (readbytes >= 0)	//DATA | EOF
-		{
-			raw = realloc(raw, rawSize + readbytes);
-			for (int i = 0; i < readbytes; i++)
-				raw[rawSize+i] = buf[i];
-			rawSize+= readbytes;
-		}
-	} while (readbytes > 0);
-	memcpy(packet, raw, rawSize);
-	if(raw)
-		free(raw);
+		printf("Error receiving data!\n");
+		return 0;
+	}
 	return 1;
 }

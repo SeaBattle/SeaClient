@@ -29,13 +29,27 @@ typedef struct
 
 typedef struct
 {
+		PacketType type;
+		int protocolVersion;
+} ResponseHeader;
+
+typedef struct
+{
 		PacketHeader header;
 		union
 		{
-				GuestAuth guestPacket;
-				PasswordAuth loginPacket;
-				AuthResp authRespPacket;
+				GuestAuth guestPacket;		//type 1
+				PasswordAuth loginPacket;	//type 2
 		};
-} Packet;
+} __attribute__ ((packed)) RequestPacket;
+
+typedef struct
+{
+		ResponseHeader header;
+		union
+		{
+				AuthResp authRespPacket;	//type 3
+		};
+} __attribute__ ((packed)) ResponsePacket;
 
 #endif /* MAIN_PACKET_H_ */

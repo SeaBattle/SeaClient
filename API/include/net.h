@@ -37,9 +37,9 @@ short noblock(int);
 int create_client_sock(char *, int);
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(Packet *, ssize_t , int );
+short sendPacket(RequestPacket *, ssize_t , int );
 
 //получает пакет от сервера. Возвращает 0 в случае ошибки
-short recvPacket(Packet *packet, int socket);
+short recvPacket(ResponsePacket *packet, int socket);
 
 #endif /* NET_H_ */

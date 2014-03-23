@@ -11,7 +11,6 @@ set(CMAKE_C_FLAGS "-std=c99")
 set (API_SOURCE  
 	${PROJECT_SOURCE_DIR}/net.c
 	${PROJECT_SOURCE_DIR}/auth.c
-	${PROJECT_SOURCE_DIR}/packet.c
 	)
               
 include_directories("${PROJECT_BINARY_DIR}")
