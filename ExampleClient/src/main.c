@@ -9,7 +9,8 @@ int main()
 	int listenPort = 4232;
 
 	Client *client = malloc(sizeof(Client));
-	if(!client) {
+	if (!client)
+	{
 		printf("Error creating client!\n");
 		return 0;
 	}
@@ -22,16 +23,18 @@ int main()
 	}
 	printf("Connected to %s : %d\n", listenAdress, listenPort);
 
-	if(!connectAndAuthorize(client))
+	switch (connectAndAuthorize(client))
 	{
-		printf("Authorization error!\n");
-		//TODO handle auth fail here!
+		case 1:
+			client->authorised = 1;
+			printf("Authorized.\n");
+			break;
+		case 0:
+			printf("Not authorized!\n");
+			break;
+		default:
+			printf("Authorization error!\n");
 	}
-
-	if(client->authorised)
-		printf("Authorized.\n");
-	else
-		printf("Not authorized!\n");
 
 	close(client->socket);
 	free(client);

@@ -12,12 +12,14 @@
 #define API_VERSION 1
 
 #include "auth_packets.h"
+#include "service_packets.h"
 
 typedef enum
 {
 	guestAuth = 1,
 	passwordAuth,
-	authResp
+	authResp,
+	errorPacket
 } PacketType;
 
 typedef struct
@@ -40,6 +42,7 @@ typedef struct
 		{
 				GuestAuth guestPacket;		//type 1
 				PasswordAuth loginPacket;	//type 2
+				Error errorPacket;			//type 4
 		};
 } __attribute__ ((packed)) RequestPacket;
 
@@ -49,6 +52,7 @@ typedef struct
 		union
 		{
 				AuthResp authRespPacket;	//type 3
+				Error errorPacket;			//type 4
 		};
 } __attribute__ ((packed)) ResponsePacket;
 

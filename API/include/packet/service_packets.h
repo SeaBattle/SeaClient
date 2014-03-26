@@ -9,7 +9,8 @@
 #define SERVICE_PACKETS_H_
 
 typedef struct {
+		short code;
 		char message[100];
-}ErrorPacket;
+}Error;
 
 #endif /* SERVICE_PACKETS_H_ */

@@ -5,36 +5,55 @@
  *      Author: tihon
  */
 
-
 #include "auth.h"
 
-short authorize(Client *client)
+/**
+ * Авторизовывает клиента на удалённом сервере - гостевой вход.
+ * @param client
+ * @return -1 - ошибка, 0 - не авторизован, 1 - авторизован
+ */
+short guestAuthorize(int socket)
 {
-	sleep(1);
 	ssize_t packetLen = sizeof(GuestAuth) + sizeof(PacketHeader);
 	RequestPacket *authPacket = malloc(packetLen);
 	authPacket->header.type = guestAuth;
 	strcpy(authPacket->guestPacket.uid, "testUid");
-	if (!sendPacket(authPacket, packetLen, client->socket))
+	if (!sendPacket(authPacket, packetLen, socket))
 	{
 		printf("Sending packet error!\n");
 		free(authPacket);
-		return 0;
+		return -1;
 	}
 	printf("No error\n");
 	free(authPacket);
 
-	ResponsePacket *authResp = malloc(sizeof(ResponsePacket));
-	if(!recvPacket(authResp, client->socket))
+	ResponsePacket *authRespPack = malloc(sizeof(ResponsePacket));
+	if (!recvPacket(authRespPack, socket))
 	{
 		printf("Receiving packet error!\n");
-		free(authResp);
-		return 0;
+		free(authRespPack);
+		return -1;
 	}
-	printf("Packet type = %d, protocol = %d, success = %d\n",
-			authResp->header.type, authResp->header.protocolVersion, authResp->authRespPacket.success);
-	free(authResp);
 
-	client->authorised = authResp->authRespPacket.success;
-	return 1;
+	if (authRespPack->header.type == authResp)
+	{ //get authorization packet
+		printf("Packet type = %d, protocol = %d, success = %d\n", authRespPack->header.type,
+		        authRespPack->header.protocolVersion, authRespPack->authRespPacket.success);
+		int authorised = authRespPack->authRespPacket.success;
+		free(authRespPack);
+		return authorised;
+	}
+	else
+	{ //get error packet (probably)
+		if (authRespPack->header.type == errorPacket)
+		{
+			printf("Got error when authorizing: [%d] : %s\n", authRespPack->errorPacket.code,
+			        authRespPack->errorPacket.message);
+		}
+		else
+		{
+			printf("Unknown packet type %d!\n", authRespPack->header.type);
+		}
+		return -1;
+	}
 }

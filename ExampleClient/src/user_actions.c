@@ -2,10 +2,7 @@
 
 short connectAndAuthorize(Client *client)
 {
-	if (!authorize(client))
-	{
-		return 0;
-	}
-
-	return 1;
+	if(client->authorised)
+		return 1;
+	return guestAuthorize(client->socket);
 }

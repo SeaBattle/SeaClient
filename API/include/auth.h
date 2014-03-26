@@ -16,6 +16,11 @@
 #include "client.h"
 #include "net.h"
 
-short authorize(Client *client);
+/**
+ * Авторизовывает клиента на удалённом сервере - гостевой вход.
+ * @param socket
+ * @return -1 - ошибка, 0 - не авторизован, 1 - авторизован
+ */
+short guestAuthorize(int socket);
 
 #endif /* AUTH_H_ */
