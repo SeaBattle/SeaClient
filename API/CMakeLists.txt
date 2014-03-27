@@ -11,6 +11,7 @@ set(CMAKE_C_FLAGS "-std=c99")
 set (API_SOURCE  
 	${PROJECT_SOURCE_DIR}/net.c
 	${PROJECT_SOURCE_DIR}/auth.c
+	${PROJECT_SOURCE_DIR}/packet/ss_guest_auth.pb-c.c
 	)
               
 include_directories("${PROJECT_BINARY_DIR}")
@@ -19,3 +20,4 @@ include_directories("${PROJECT_INCLUDE_DIR}/packet")
 include_directories (/usr/include)
 
 add_library(${PROJECT_NAME} STATIC ${API_SOURCE})
+target_link_libraries (${PROJECT_NAME} protobuf-c)
