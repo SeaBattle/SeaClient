@@ -73,8 +73,9 @@ int create_client_sock(char *host, int port)
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
 short sendPacket(RequestPacket *packet, ssize_t len, int socket)
 {
-	packet->header.apiVersion = API_VERSION;
-	packet->header.protocolVersion = PROTOCOL_VERSION;
+	packet->header.type = htonl(packet->header.type);
+	packet->header.apiVersion = htonl(API_VERSION);
+	packet->header.protocolVersion = htonl(PROTOCOL_VERSION);
 	ssize_t sent = send(socket, packet, len, 0);
 	return len != sent ? 0 : 1;
 }
@@ -83,6 +84,9 @@ short sendPacket(RequestPacket *packet, ssize_t len, int socket)
 short recvPacket(ResponsePacket *packet, int socket)
 {
 	int readbytes = read(socket, packet, sizeof(ResponsePacket));
+	packet->header.type = htonl(packet->header.type);
+	packet->header.protocolVersion = htonl(packet->header.protocolVersion);
+	packet->errorPacket.code = htonl(packet->errorPacket.code);
 	if(readbytes < 0)
 	{
 		printf("Error receiving data!\n");

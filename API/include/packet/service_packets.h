@@ -9,7 +9,7 @@
 #define SERVICE_PACKETS_H_
 
 typedef struct {
-		short code;
+		int code;
 		char message[100];
 }Error;
 

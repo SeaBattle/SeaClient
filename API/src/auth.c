@@ -39,7 +39,7 @@ short guestAuthorize(int socket)
 	{ //get authorization packet
 		printf("Packet type = %d, protocol = %d, success = %d\n", authRespPack->header.type,
 		        authRespPack->header.protocolVersion, authRespPack->authRespPacket.success);
-		int authorised = authRespPack->authRespPacket.success;
+		short authorised = authRespPack->authRespPacket.success;
 		free(authRespPack);
 		return authorised;
 	}

@@ -8,17 +8,20 @@
 #ifndef AUTH_PACKETS_H_
 #define AUTH_PACKETS_H_
 
-typedef struct {
+typedef struct
+{
 		char uid[30];
-}GuestAuth;
+} GuestAuth;
 
-typedef struct {
+typedef struct
+{
 		char login[30];
 		char password[30];
-}PasswordAuth;
+} PasswordAuth;
 
-typedef struct {
+typedef struct
+{
 		char success;
-}AuthResp;
+} AuthResp;
 
 #endif /* AUTH_PACKETS_H_ */

@@ -44,7 +44,7 @@ typedef struct
 				PasswordAuth loginPacket;	//type 2
 				Error errorPacket;			//type 4
 		};
-} __attribute__ ((packed)) RequestPacket;
+} RequestPacket;
 
 typedef struct
 {
@@ -54,6 +54,6 @@ typedef struct
 				AuthResp authRespPacket;	//type 3
 				Error errorPacket;			//type 4
 		};
-} __attribute__ ((packed)) ResponsePacket;
+} ResponsePacket;
 
 #endif /* MAIN_PACKET_H_ */
