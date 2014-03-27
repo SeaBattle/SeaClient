@@ -86,7 +86,7 @@ short recvPacket(ResponsePacket *packet, int socket)
 	int readbytes = read(socket, packet, sizeof(ResponsePacket));
 	packet->header.type = htonl(packet->header.type);
 	packet->header.protocolVersion = htonl(packet->header.protocolVersion);
-	packet->errorPacket.code = htonl(packet->errorPacket.code);
+	//TODO переделать функцию. Для каждого типа пакетов делать конвертацию порядка байт.
 	if(readbytes < 0)
 	{
 		printf("Error receiving data!\n");
