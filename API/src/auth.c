@@ -15,20 +15,31 @@
 short guestAuthorize(int socket)
 {
 	GuestAuth authPacket = GUEST_AUTH__INIT;
-	authPacket.header->type = guestAuth;
-	strcpy(authPacket.uid, "testUid");
+	authPacket.uid = "testUid";
 
-	ssize_t len = guest_auth__get_packed_size(&authPacket);
-	void *buf = malloc(len);
+	//pack packet
+	ssize_t packetLen = guest_auth__get_packed_size(&authPacket);
+	void *packet = malloc(packetLen);
 
-	guest_auth__pack(&authPacket, buf);
+	guest_auth__pack(&authPacket, packet);
 
-	if (!sendPacket(buf, len, socket))
+	//send packet
+	if (!sendPacket(guestAuth, packet, packetLen, socket))
 	{
 		printf("Sending packet error!\n");
+		free(packet);
 		return -1;
 	}
 	printf("No error\n");
+	free(packet);
+
+	Header header;
+	if(!recvPacket(&header, socket))
+	{
+		return -1;
+	}
+	printf("%d - %d - %d\n", header.packet, header.apiversion, header.protocol);
+
 	return 1;
 
 //	ResponsePacket *authRespPack = malloc(sizeof(ResponsePacket));

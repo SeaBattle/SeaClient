@@ -70,31 +70,46 @@ int create_client_sock(char *host, int port)
 	return sock;
 }
 
-//заполняет заголовок статической информацией (версии протокола и библиотеки)
-void fillHeaders(Header *header)
+short sendPacket(PacketType type, void *packet, ssize_t packetLen, int socket)
 {
-	header->apiversion = API_VERSION;
-	header->protocol = PROTOCOL_VERSION;
-}
+	//create and fill header
+	Header header = HEADER__INIT;
+	header.type = type;
+	header.apiversion = API_VERSION;
+	header.protocol = PROTOCOL_VERSION;
 
-//отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(char *packet, ssize_t len, int socket)
-{
-	ssize_t sent = send(socket, packet, len, 0);
+	//create and fill binary tail
+	ProtobufCBinaryData data;
+	data.len = packetLen;
+	data.data = packet;
+
+	//attach binary tail to header
+	header.packet = data;
+
+	//pack header (and tail) to buffer
+	ssize_t len = header__get_packed_size(&header);
+	void *buf = malloc(len);
+	header__pack(&header, buf);
+
+	//send buffer
+	ssize_t sent = send(socket, buf, len, 0);
+	free(buf);
 	return len != sent ? 0 : 1;
 }
 
 ////получает пакет от сервера. Возвращает 0 в случае ошибки
-//short recvPacket(ResponsePacket *packet, int socket)
-//{
-//	int readbytes = read(socket, packet, sizeof(ResponsePacket));
-//	packet->header.type = htonl(packet->header.type);
-//	packet->header.protocolVersion = htonl(packet->header.protocolVersion);
-//	//TODO переделать функцию. Для каждого типа пакетов делать конвертацию порядка байт.
-//	if(readbytes < 0)
-//	{
-//		printf("Error receiving data!\n");
-//		return 0;
-//	}
-//	return 1;
-//}
+short recvPacket(Header *header, int socket)
+{
+	void *buf = malloc(MAX_MSG_SIZE);
+	ssize_t msg_len = read(socket, buf, MAX_MSG_SIZE);
+	if (msg_len < 0)
+	{
+		free(buf);
+		return 0;
+	}
+
+	header = header__unpack(NULL, msg_len, buf);
+	free(buf);
+
+	return header? 1 : 0;
+}

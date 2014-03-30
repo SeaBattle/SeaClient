@@ -10,7 +10,6 @@ PROTOBUF_C_BEGIN_DECLS
 
 
 typedef struct _GuestAuth GuestAuth;
-typedef struct _Header Header;
 
 
 /* --- enums --- */
@@ -21,24 +20,11 @@ typedef struct _Header Header;
 struct  _GuestAuth
 {
   ProtobufCMessage base;
-  Header *header;
   char *uid;
 };
 #define GUEST_AUTH__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&guest_auth__descriptor) \
-    , NULL, NULL }
-
-
-struct  _Header
-{
-  ProtobufCMessage base;
-  int32_t type;
-  int32_t protocol;
-  int32_t apiversion;
-};
-#define HEADER__INIT \
- { PROTOBUF_C_MESSAGE_INIT (&header__descriptor) \
-    , 0, 0, 0 }
+    , NULL }
 
 
 /* GuestAuth methods */
@@ -60,32 +46,10 @@ GuestAuth *
 void   guest_auth__free_unpacked
                      (GuestAuth *message,
                       ProtobufCAllocator *allocator);
-/* Header methods */
-void   header__init
-                     (Header         *message);
-size_t header__get_packed_size
-                     (const Header   *message);
-size_t header__pack
-                     (const Header   *message,
-                      uint8_t             *out);
-size_t header__pack_to_buffer
-                     (const Header   *message,
-                      ProtobufCBuffer     *buffer);
-Header *
-       header__unpack
-                     (ProtobufCAllocator  *allocator,
-                      size_t               len,
-                      const uint8_t       *data);
-void   header__free_unpacked
-                     (Header *message,
-                      ProtobufCAllocator *allocator);
 /* --- per-message closures --- */
 
 typedef void (*GuestAuth_Closure)
                  (const GuestAuth *message,
-                  void *closure_data);
-typedef void (*Header_Closure)
-                 (const Header *message,
                   void *closure_data);
 
 /* --- services --- */
@@ -94,7 +58,6 @@ typedef void (*Header_Closure)
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor guest_auth__descriptor;
-extern const ProtobufCMessageDescriptor header__descriptor;
 
 PROTOBUF_C_END_DECLS
 

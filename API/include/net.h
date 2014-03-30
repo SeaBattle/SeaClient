@@ -26,12 +26,16 @@
 
 #include <stdio.h>
 
+#include "ss_packet_header.pb-c.h"
 #include "ss_guest_auth.pb-c.h"
 
-typedef enum {
-	guestAuth,
+#define MAX_MSG_SIZE 1024
+
+typedef enum
+{
+	guestAuth = 1,
 	loginAuth
-}PacketType;
+} PacketType;
 
 //настраивет порт/адрес/протокол сервера. Возвращает -1 в случае ошибки. 0 - если всё нормально.
 short set_address(char *, int, struct sockaddr_in *);
@@ -42,13 +46,10 @@ short noblock(int);
 //настраивает серверный сокет. Возвращает -1 в случае ошибки. Сокет - в другом случае.
 int create_client_sock(char *, int);
 
-//заполняет заголовок статической информацией (версии протокола и библиотеки)
-void fillHeaders(Header *);
-
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(char *, ssize_t , int );
+short sendPacket(PacketType, void *, ssize_t, int);
 
 //получает пакет от сервера. Возвращает 0 в случае ошибки
-//short recvPacket(ResponsePacket *packet, int socket);
+short recvPacket(Header *, int);
 
 #endif /* NET_H_ */
