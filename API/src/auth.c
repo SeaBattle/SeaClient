@@ -15,7 +15,7 @@
 short guestAuthorize(int socket)
 {
 	Packet request;
-	strcpy(request.guestAuthPacket.uid, "testUid");
+	strcpy(request.guestAuthPacket.uid, "user's testUid");
 
 	if(!sendPacket(&request, guestAuth, socket))
 	{

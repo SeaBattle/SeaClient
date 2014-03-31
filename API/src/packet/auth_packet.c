@@ -14,12 +14,12 @@
  * @return буффер-источник, куда нужно записать кодированный пакет
  * !Важно: буффер должен быть освобождён в конце.
  */
-void *encodeGuestPacket(GuestAuthPacket *packet)
+void *encodeGuestPacket(ssize_t *packetLen, GuestAuthPacket *packet)
 {
 	GuestAuth authPacket = GUEST_AUTH__INIT;
 	authPacket.uid = packet->uid;
-	ssize_t packetLen = guest_auth__get_packed_size(&authPacket);
-	void *buffer = malloc(packetLen);
+	*packetLen = guest_auth__get_packed_size(&authPacket);
+	void *buffer = malloc(*packetLen);
 	guest_auth__pack(&authPacket, buffer);
 	return buffer;
 }

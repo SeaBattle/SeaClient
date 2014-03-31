@@ -84,7 +84,7 @@ short sendPacket(Packet *packet, PacketType type, int socket)
 	switch (type)
 	{
 		case guestAuth:
-			packetRaw = encodeGuestPacket(&packet->guestAuthPacket);
+			packetRaw = encodeGuestPacket(&packetLen, &packet->guestAuthPacket);
 			break;
 		default:
 			printf("Unknown packet type!");
