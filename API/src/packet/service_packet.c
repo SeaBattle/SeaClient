@@ -1,24 +1,12 @@
 /*
- * service_packet.h
+ * service_packet.с
  *
- *  Created on: 30 марта 2014 г.
+ *  Created on: 31 марта 2014 г.
  *      Author: tihon
  */
 
-#ifndef SERVICE_PACKET_H_
-#define SERVICE_PACKET_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "ss_error_packet.pb-c.h"
-
-typedef struct
-{
-		int code;
-		char message[100];
-} Error;
+#include "service_packet.h"
 
 /**
  * Декодирует двоичные данные в протобуфер-пакет.
@@ -28,6 +16,16 @@ typedef struct
  * @param raw - указатель на структуру бинарного пакета. Там содержится длина и данные.
  * @packet пакет, в который нужно декодировать.
  */
-void decodeErrorPacket(ProtobufCBinaryData *, Error *);
-
-#endif /* SERVICE_PACKET_H_ */
+void decodeErrorPacket(ProtobufCBinaryData *raw, Error *packet)
+{
+	ErrorPacket *errorPack = error_packet__unpack(NULL, raw->len, raw->data);
+	if(!errorPack)
+	{
+		printf("Error converting packet!");
+		packet=NULL;
+		return;
+	}
+	packet->code = errorPack->code;
+	strcpy(packet->message, errorPack->descr);
+	error_packet__free_unpacked(errorPack, NULL);
+}

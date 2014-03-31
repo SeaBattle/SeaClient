@@ -18,6 +18,7 @@ include_directories("${PROJECT_INCLUDE_DIR}")
 include_directories(/usr/include)
 include_directories(${CMAKE_SOURCE_DIR}/API/include)
 include_directories(${CMAKE_SOURCE_DIR}/API/include/packet)
+include_directories(${CMAKE_SOURCE_DIR}/API/include/packet/gen)
  
 add_executable(${PROJECT_NAME} ${SOURCE})
 target_link_libraries (${PROJECT_NAME} seaclient_api)
