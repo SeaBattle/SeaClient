@@ -14,31 +14,23 @@
  */
 short guestAuthorize(int socket)
 {
-	GuestAuth authPacket = GUEST_AUTH__INIT;
-	authPacket.uid = "testUid";
+	Packet request;
+	strcpy(request.guestAuthPacket.uid, "testUid");
 
-	//pack packet
-	ssize_t packetLen = guest_auth__get_packed_size(&authPacket);
-	void *packet = malloc(packetLen);
-
-	guest_auth__pack(&authPacket, packet);
-
-	//send packet
-	if (!sendPacket(guestAuth, packet, packetLen, socket))
+	if(!sendPacket(&request, guestAuth, socket))
 	{
 		printf("Sending packet error!\n");
-		free(packet);
 		return -1;
 	}
-	printf("No error\n");
-	free(packet);
 
-	Header header;
-	if(!recvPacket(&header, socket))
+	Packet responce;
+	if(!recvPacket(&responce, socket))
 	{
+		printf("Receiving packet error!\n");
 		return -1;
 	}
-	printf("%d - %d - %d\n", header.packet, header.apiversion, header.protocol);
+
+	printf("packet type %d, code %d, msg %s\n", responce.header.type, responce.errorPacket.code, responce.errorPacket.reason);
 
 	return 1;
 

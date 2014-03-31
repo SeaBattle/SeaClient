@@ -70,7 +70,7 @@ int create_client_sock(char *host, int port)
 	return sock;
 }
 
-short sendPacket(PacketType type, void *packet, ssize_t packetLen, int socket)
+short sendPacket(Packet *packet, PacketType type, int socket)
 {
 	//create and fill header
 	Header header = HEADER__INIT;
@@ -78,10 +78,30 @@ short sendPacket(PacketType type, void *packet, ssize_t packetLen, int socket)
 	header.apiversion = API_VERSION;
 	header.protocol = PROTOCOL_VERSION;
 
+	//form and create packet body
+	//TODO разнести на разные функции
+	ssize_t packetLen;
+	void *packetRaw;
+	switch (type)
+	{
+		case guestAuth:
+		{
+			GuestAuth authPacket = GUEST_AUTH__INIT;
+			authPacket.uid = packet->guestAuthPacket.uid;
+			packetLen = guest_auth__get_packed_size(&authPacket);
+			packetRaw = malloc(packetLen);
+			guest_auth__pack(&authPacket, packetRaw);
+			break;
+		}
+		default:
+			printf("Unknown packet type!");
+			return 0;
+	}
+
 	//create and fill binary tail
 	ProtobufCBinaryData data;
 	data.len = packetLen;
-	data.data = packet;
+	data.data = packetRaw;
 
 	//attach binary tail to header
 	header.packet = data;
@@ -93,14 +113,18 @@ short sendPacket(PacketType type, void *packet, ssize_t packetLen, int socket)
 
 	//send buffer
 	ssize_t sent = send(socket, buf, len, 0);
+
+	//free buffers
 	free(buf);
+	free(packetRaw);
 	return len != sent ? 0 : 1;
 }
 
-////получает пакет от сервера. Возвращает 0 в случае ошибки
-short recvPacket(Header *header, int socket)
+//получает пакет от сервера. Возвращает 0 в случае ошибки
+short recvPacket(Packet *packet, int socket)
 {
 	void *buf = malloc(MAX_MSG_SIZE);
+	//get packet
 	ssize_t msg_len = read(socket, buf, MAX_MSG_SIZE);
 	if (msg_len < 0)
 	{
@@ -108,8 +132,36 @@ short recvPacket(Header *header, int socket)
 		return 0;
 	}
 
-	header = header__unpack(NULL, msg_len, buf);
-	free(buf);
+	Header *header = header__unpack(NULL, msg_len, buf);
+	printf("Type %d - pi %d - Protocol %d\n", header->type, header->apiversion, header->protocol);
 
-	return header? 1 : 0;
+	packet->header.type = header->type;
+	packet->header.protocolVersion = header->protocol;
+	packet->header.apiVersion = header->apiversion;
+
+	switch (packet->header.type)
+	{	//TODO разнести на функции
+		case error:
+		{
+			ErrorPacket *errorPack = error_packet__unpack(NULL, header->packet.len, header->packet.data);
+			if(!errorPack) return 0;
+			packet->errorPacket.code = errorPack->code;
+			strcpy(packet->errorPacket.reason, errorPack->descr);
+			error_packet__free_unpacked(errorPack, NULL);
+			break;
+		}
+		case authResp:
+			break;
+		default:
+			printf("Unknown packet type!");
+			free(buf);
+			buf = NULL;
+			header__free_unpacked(header, NULL);
+			header = NULL;
+			return 0;
+	}
+	if (buf) free(buf);
+	if (header) header__free_unpacked(header, NULL);
+
+	return 1;
 }
