@@ -29,8 +29,6 @@
 #include "packet.h"
 
 #include "ss_packet_header.pb-c.h"
-#include "ss_guest_auth.pb-c.h"
-#include "ss_error_packet.pb-c.h"
 
 #define MAX_MSG_SIZE 1024
 
