@@ -21,10 +21,11 @@ typedef struct
 /**
  * Конвертирует нативный пакет Packet в протобуфер-пакет.
  * Кодирует протобуфер-пакет в буфер.
- * @param buffer - буффер-источник, куда нужно записать кодированный пакет
  * @packet пакет, который нужно закодировать
+ * @return буффер-источник, куда нужно записать кодированный пакет
+ * !Важно: буффер должен быть освобождён в конце.
  */
-void encodeGuestPacket(void *, GuestAuthPacket *);
+void *encodeGuestPacket(GuestAuthPacket *);
 
 typedef struct
 {

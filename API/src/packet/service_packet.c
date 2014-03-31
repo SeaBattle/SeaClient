@@ -26,6 +26,6 @@ void decodeErrorPacket(ProtobufCBinaryData *raw, Error *packet)
 		return;
 	}
 	packet->code = errorPack->code;
-	strcpy(packet->reason, errorPack->descr);
+	strcpy(packet->message, errorPack->descr);
 	error_packet__free_unpacked(errorPack, NULL);
 }

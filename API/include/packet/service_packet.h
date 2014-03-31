@@ -17,7 +17,7 @@
 typedef struct
 {
 		int code;
-		char reason[100];
+		char message[100];
 } Error;
 
 /**

@@ -84,7 +84,7 @@ short sendPacket(Packet *packet, PacketType type, int socket)
 	switch (type)
 	{
 		case guestAuth:
-			encodeGuestPacket(packetRaw, &packet->guestAuthPacket);
+			packetRaw = encodeGuestPacket(&packet->guestAuthPacket);
 			break;
 		default:
 			printf("Unknown packet type!");
@@ -127,14 +127,13 @@ short recvPacket(Packet *packet, int socket)
 
 	Header *header = header__unpack(NULL, msg_len, buf);
 	free(buf);
-	printf("Type %d - pi %d - Protocol %d\n", header->type, header->apiversion, header->protocol);
 
 	packet->header.type = header->type;
 	packet->header.protocolVersion = header->protocol;
 	packet->header.apiVersion = header->apiversion;
 
 	switch (packet->header.type)
-	{	//TODO разнести на функции
+	{
 		case error:
 			decodeErrorPacket(&header->packet, &packet->errorPacket);
 			if(!&packet->errorPacket)

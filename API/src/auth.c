@@ -23,6 +23,8 @@ short guestAuthorize(int socket)
 		return -1;
 	}
 
+	printf("sent\n");
+
 	Packet responce;
 	if(!recvPacket(&responce, socket))
 	{
@@ -30,37 +32,24 @@ short guestAuthorize(int socket)
 		return -1;
 	}
 
-	printf("packet type %d, code %d, msg %s\n", responce.header.type, responce.errorPacket.code, responce.errorPacket.reason);
-
-	return 1;
-
-//	ResponsePacket *authRespPack = malloc(sizeof(ResponsePacket));
-//	if (!recvPacket(authRespPack, socket))
-//	{
-//		printf("Receiving packet error!\n");
-//		free(authRespPack);
-//		return -1;
-//	}
-//
-//	if (authRespPack->header.type == authResp)
-//	{ //get authorization packet
-//		printf("Packet type = %d, protocol = %d, success = %d\n", authRespPack->header.type,
-//		        authRespPack->header.protocolVersion, authRespPack->authRespPacket.success);
-//		short authorised = authRespPack->authRespPacket.success;
-//		free(authRespPack);
-//		return authorised;
-//	}
-//	else
-//	{ //get error packet (probably)
-//		if (authRespPack->header.type == errorPacket)
-//		{
-//			printf("Got error when authorizing: [%d] : %s\n", authRespPack->errorPacket.code,
-//			        authRespPack->errorPacket.message);
-//		}
-//		else
-//		{
-//			printf("Unknown packet type %d!\n", authRespPack->header.type);
-//		}
-//		return -1;
-//	}
+	if (responce.header.type == authResp)
+	{ //got authorization packet
+		printf("Packet type = %d, protocol = %d, success = %d\n", responce.header.type,
+				responce.header.protocolVersion, responce.authRespPacket.success);
+		short authorised = responce.authRespPacket.success;
+		return authorised;
+	}
+	else
+	{ //got error packet (probably)
+		if (responce.header.type == error)
+		{
+			printf("Got error when authorizing: [%d] : %s\n", responce.errorPacket.code,
+					responce.errorPacket.message);
+		}
+		else
+		{
+			printf("Unknown packet type %d!\n", responce.header.type);
+		}
+		return -1;
+	}
 }
