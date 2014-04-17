@@ -70,7 +70,8 @@ int create_client_sock(char *host, int port)
 	return sock;
 }
 
-short sendPacket(Packet *packet, PacketType type, int socket)
+//создаёт бинарный сетевой пакет и возвращает его структуру
+NetPacket *encode(Packet *packet, PacketType type)
 {
 	//create and fill header
 	Header header = HEADER__INIT;
@@ -78,80 +79,111 @@ short sendPacket(Packet *packet, PacketType type, int socket)
 	header.apiversion = API_VERSION;
 	header.protocol = PROTOCOL_VERSION;
 
-	//form and create packet body
-	ssize_t packetLen;
-	void *packetRaw;
-	switch (type)
-	{
-		case guestAuth:
-			packetRaw = encodeGuestPacket(&packetLen, &packet->guestAuthPacket);
-			break;
-		default:
-			printf("Unknown packet type!");
-			return 0;
-	}
-
-	//create and fill binary tail
-	ProtobufCBinaryData data;
-	data.len = packetLen;
-	data.data = packetRaw;
-
 	//attach binary tail to header
+	ProtobufCBinaryData data = encodePacketBody(packet, type);
+	if(!data.data)
+		return NULL;
 	header.packet = data;
 
-	//pack header (and tail) to buffer
-	ssize_t len = header__get_packed_size(&header);
-	void *buf = malloc(len);
-	header__pack(&header, buf);
-
-	//send buffer
-	ssize_t sent = send(socket, buf, len, 0);
-
-	//free buffers
-	free(buf);
-	free(packetRaw);
-	return len != sent ? 0 : 1;
+	//compose and return packet
+	return composePacket(&header);
 }
 
-//получает пакет от сервера. Возвращает 0 в случае ошибки
-short recvPacket(Packet *packet, int socket)
+//декодирует бинарный пакет в протобуф пакет, а потом в нативный Packet.
+//Возвращает 1 в случае успеха и 0 в случае ошибки.
+short decode(Packet *packet, NetPacket *rawPacket)
 {
-	void *buf = malloc(MAX_MSG_SIZE);
-	//get packet
-	ssize_t msg_len = read(socket, buf, MAX_MSG_SIZE);
-	if (msg_len < 0)
+	//unpack header
+	Header *header = header__unpack(NULL, rawPacket->len, rawPacket->body);
+	if(!header)
 	{
-		free(buf);
+		perror("Can't unpack header!");
 		return 0;
 	}
 
-	Header *header = header__unpack(NULL, msg_len, buf);
-	free(buf);
-
+	//fill native packet's header
 	packet->header.type = header->type;
 	packet->header.protocolVersion = header->protocol;
 	packet->header.apiVersion = header->apiversion;
 
-	switch (packet->header.type)
+	//decode packet's body
+	if(!decodePacketBody(header, packet))
 	{
-		case error:
-			decodeErrorPacket(&header->packet, &packet->errorPacket);
-			if(!&packet->errorPacket)
-			{
-				header__free_unpacked(header, NULL);
-				return 0;
-			}
-			break;
-		case authResp:
-			break;
-		default:
-			printf("Unknown packet type!");
-			header__free_unpacked(header, NULL);
-			header = NULL;
-			return 0;
+		header__free_unpacked(header, NULL);
+		return 0;
 	}
 
-	if (header) header__free_unpacked(header, NULL);
-
+	//free header
+	header__free_unpacked(header, NULL);
 	return 1;
+}
+
+//отправляет пакет формата {длина, данные} по сокету до тех пор, пока не отправит всё
+//возвращает 1 - если всё хорошо и 0 при ошибке
+short sendData(NetPacket *packet, int socket)
+{
+	ssize_t dataToSend = packet->len;
+	ssize_t sentData = 0;
+
+	while (dataToSend > 0)
+	{
+		ssize_t ret = send(socket, packet->body[sentData], dataToSend, 0);
+
+		if (ret == 0) break;
+		if (ret == -1)
+		{
+			perror("Error sending data!\n");
+			return 0;
+		}
+		dataToSend -= ret;
+		sentData += ret;
+	}
+	return 1;
+}
+
+//получает весь пакет формата {длина, данные}. Возвращает пакет в случае успеха
+//и NULL в случае ошибки. Important! Returned packet should be freed later.
+NetPacket * recvData(int socket)
+{
+	char msgLen[4];
+	ssize_t readDataLen = read(socket, msgLen, 4);
+	if (readDataLen <= 0)
+	{
+		perror("Can't read data!\n");
+		return 0;
+	}
+	ssize_t packetLen = byteToLong(msgLen);
+	ssize_t dataToRead = packetLen;
+	ssize_t readData = 0;
+
+	char *buf = malloc(sizeof(dataToRead));
+
+	while (dataToRead > 0)
+	{
+		ssize_t ret = read(socket, buf[readData], dataToRead);
+
+		if (ret == 0) break;
+		if (ret == -1)
+		{
+			perror("Error sending data!\n");
+			free(buf);
+			return NULL;
+		}
+
+		dataToRead -= ret;
+		readData += ret;
+	}
+
+	NetPacket *rawData = malloc(sizeof(NetPacket));
+	rawData->len = packetLen;
+	rawData->body = buf;
+
+	return rawData;
+}
+
+//освобождает память, занимаемую пакетом
+void freePacket(NetPacket *packet)
+{
+	free(packet->body);
+	free(packet);
 }

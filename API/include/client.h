@@ -8,6 +8,8 @@
 #ifndef CLIENT_H_
 #define CLIENT_H_
 
+#include "net.h"
+
 typedef enum
 {
 	disconnected = -1,
@@ -18,9 +20,15 @@ typedef enum
 
 typedef struct
 {
-		State state;
-		int socket;
-		short authorised;
+	State state;
+	int socket;
+	short authorised;
 } Client;
+
+//отправляет пакет на сервер. Возвращает 0 в случае ошибки
+short sendPacket(Packet *, PacketType, int);
+
+//получает пакет от сервера. Возвращает 0 в случае ошибки
+short recvPacket(Packet *, int);
 
 #endif /* CLIENT_H_ */

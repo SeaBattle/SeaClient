@@ -13,7 +13,6 @@
 #include <string.h>
 
 #include "client.h"
-#include "net.h"
 
 /**
  * Авторизовывает клиента на удалённом сервере - гостевой вход.
