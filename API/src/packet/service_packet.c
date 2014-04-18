@@ -21,7 +21,7 @@ void decodeErrorPacket(ProtobufCBinaryData *raw, Error *packet)
 	ErrorPacket *errorPack = error_packet__unpack(NULL, raw->len, raw->data);
 	if(!errorPack)
 	{
-		printf("Error converting packet!");
+		perror("Error converting packet!");
 		packet=NULL;
 		return;
 	}

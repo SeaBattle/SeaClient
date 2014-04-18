@@ -11,6 +11,8 @@ set(CMAKE_C_FLAGS "-std=c99")
 set (API_SOURCE  
 	${PROJECT_SOURCE_DIR}/net.c
 	${PROJECT_SOURCE_DIR}/auth.c
+	${PROJECT_SOURCE_DIR}/client.c
+	${PROJECT_SOURCE_DIR}/packet/packet.c
 	${PROJECT_SOURCE_DIR}/packet/auth_packet.c
 	${PROJECT_SOURCE_DIR}/packet/service_packet.c
 	${PROJECT_SOURCE_DIR}/packet/gen/ss_packet_header.pb-c.c

@@ -8,7 +8,7 @@ int main()
 	char *listenAdress = "127.0.0.1";
 	int listenPort = 4232;
 
-	Client *client = malloc(sizeof(Client));
+	Client *client = calloc(1, sizeof(Client));
 	if (!client)
 	{
 		printf("Error creating client!\n");
