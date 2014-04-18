@@ -127,7 +127,7 @@ short sendData(NetPacket *packet, int socket)
 
 	while (dataToSend > 0)
 	{
-		ssize_t ret = send(socket, packet->body[sentData], dataToSend, 0);
+		ssize_t ret = send(socket, &packet->body[sentData], dataToSend, 0);
 
 		if (ret == 0) break;
 		if (ret == -1)
@@ -156,11 +156,11 @@ NetPacket * recvData(int socket)
 	ssize_t dataToRead = packetLen;
 	ssize_t readData = 0;
 
-	char *buf = malloc(sizeof(dataToRead));
+	char *buf = malloc(packetLen);
 
 	while (dataToRead > 0)
 	{
-		ssize_t ret = read(socket, buf[readData], dataToRead);
+		ssize_t ret = read(socket, &buf[readData], dataToRead);
 
 		if (ret == 0) break;
 		if (ret == -1)

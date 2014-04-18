@@ -7,6 +7,7 @@
 
 #include "client.h"
 
+//отправляет пакет на сервер. Возвращает 0 в случае ошибки
 short sendPacket(Packet *packet, PacketType type, int socket)
 {
 	//encode packet

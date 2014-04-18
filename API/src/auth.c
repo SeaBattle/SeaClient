@@ -23,8 +23,6 @@ short guestAuthorize(int socket)
 		return -1;
 	}
 
-	printf("sent\n");
-
 	Packet responce;
 	if (!recvPacket(&responce, socket))
 	{
@@ -53,4 +51,5 @@ short guestAuthorize(int socket)
 		}
 		return -1;
 	}
+	return -1;
 }

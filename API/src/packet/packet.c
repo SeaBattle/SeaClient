@@ -78,7 +78,7 @@ NetPacket *composePacket(Header *header)
 
 	//compose net packet
 	NetPacket *pack = malloc(sizeof(NetPacket));
-	pack->len = bodyLen;
+	pack->len = HEADER_LENGTH + bodyLen;
 	pack->body = fullPacket;
 	return pack;
 }
