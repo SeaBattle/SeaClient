@@ -1,3 +1,6 @@
 [submodule "deps/protobuf-c"]
 	path = deps/protobuf-c
 	url = git@github.com:protobuf-c/protobuf-c.git
+[submodule "deps/SeaPackets"]
+	path = deps/SeaPackets
+	url = git@github.com:comtihon/SeaPackets.git
