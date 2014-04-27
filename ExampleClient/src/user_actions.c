@@ -4,5 +4,7 @@ short connectAndAuthorize(Client *client)
 {
 	if(client->authorised)
 		return 1;
-	return guestAuthorize(client->socket);
+	//loginAuthorize(client->socket, "vasya", "somepass");
+	//guestAuthorize(client->socket);
+	return loginAuthorize(client->socket, "vasya", "somepass");
 }

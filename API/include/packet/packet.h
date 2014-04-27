@@ -55,7 +55,7 @@ typedef struct
 } NetPacket;
 
 //Кодирует тело пакета согласно типу.
-ProtobufCBinaryData encodePacketBody(Packet *, PacketType);
+ProtobufCBinaryData encodePacketBody(Packet *);
 
 //Декодирует тело пакета согласно типу.
 short decodePacketBody(Header *, Packet *);

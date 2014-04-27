@@ -8,7 +8,7 @@
 #include "packet.h"
 
 //Кодирует тело пакета согласно типу.
-ProtobufCBinaryData encodePacketBody(Packet *packet, PacketType type)
+ProtobufCBinaryData encodePacketBody(Packet *packet)
 {
 	//form and create packet body
 	void *bodyRaw;
@@ -17,10 +17,13 @@ ProtobufCBinaryData encodePacketBody(Packet *packet, PacketType type)
 	ProtobufCBinaryData data;
 
 	//encode packet body, depending on type
-	switch (type)
+	switch (packet->header.type)
 	{
 		case guestAuth:
 			bodyRaw = encodeGuestPacket(&len, &packet->guestAuthPacket);
+			break;
+		case loginAuth:
+			bodyRaw = encodeLoginPacket(&len, &packet->loginAuthPacket);
 			break;
 		default:
 			perror("Unknown packet type!");

@@ -8,10 +8,10 @@
 #include "client.h"
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(Packet *packet, PacketType type, int socket)
+short sendPacket(Packet *packet, int socket)
 {
 	//encode packet
-	NetPacket *rawPacket = encode(packet, type);
+	NetPacket *rawPacket = encode(packet);
 	if(!rawPacket)
 		return 0;
 

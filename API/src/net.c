@@ -71,16 +71,16 @@ int create_client_sock(char *host, int port)
 }
 
 //создаёт бинарный сетевой пакет и возвращает его структуру
-NetPacket *encode(Packet *packet, PacketType type)
+NetPacket *encode(Packet *packet)
 {
 	//create and fill header
 	Header header = HEADER__INIT;
-	header.type = type;
+	header.type = packet->header.type;
 	header.apiversion = API_VERSION;
 	header.protocol = PROTOCOL_VERSION;
 
 	//attach binary tail to header
-	ProtobufCBinaryData data = encodePacketBody(packet, type);
+	ProtobufCBinaryData data = encodePacketBody(packet);
 	if(!data.data)
 		return NULL;
 	header.packet = data;

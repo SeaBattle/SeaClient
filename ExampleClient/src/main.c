@@ -36,6 +36,7 @@ int main()
 			printf("Authorization error!\n");
 	}
 
+	sleep(2);
 	close(client->socket);
 	free(client);
 	return 0;

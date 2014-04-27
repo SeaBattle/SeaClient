@@ -26,7 +26,7 @@ typedef struct
 } Client;
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
-short sendPacket(Packet *, PacketType, int);
+short sendPacket(Packet *, int);
 
 //получает пакет от сервера. Возвращает 0 в случае ошибки
 short recvPacket(Packet *, int);

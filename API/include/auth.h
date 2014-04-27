@@ -19,6 +19,19 @@
  * @param socket
  * @return -1 - ошибка, 0 - не авторизован, 1 - авторизован
  */
-short guestAuthorize(int socket);
+short guestAuthorize(int);
+
+/**
+ * Авторизовывает клиента на удалённом сервере - парольный вход.
+ * @param client
+ * @return -1 - ошибка, 0 - не авторизован, 1 - авторизован
+ */
+short loginAuthorize(int, char *, char *);
+
+/**
+ * Выполняет авторизацию по заранее заполненному пакету
+ * @param request -1 - ошибка, 0 - не авторизован, 1 - авторизован
+ */
+short processAuth(Packet *, int);
 
 #endif /* AUTH_H_ */

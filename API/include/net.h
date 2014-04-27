@@ -46,7 +46,7 @@ short sendData(NetPacket *, int);
 NetPacket * recvData(int);
 
 //создаёт бинарный сетевой пакет и возвращает его структуру
-NetPacket *encode(Packet *, PacketType );
+NetPacket *encode(Packet *);
 
 //декодирует бинарный пакет в протобуф пакет, а потом в нативный Packet.
 //Возвращает 1 в случае успеха и 0 в случае ошибки.
