@@ -16,18 +16,13 @@
 typedef struct
 {
 		char uid[30];
-} GuestAuthPacket;
+} GuestAuth;
 
 typedef struct
 {
 		char login[30];
 		char password[30];
-} LoginAuthPacket;
-
-typedef struct
-{
-		char success;
-} AuthRespPacket;
+} LoginAuth;
 
 /**
  * Конвертирует нативный пакет Packet в протобуфер-пакет.
@@ -37,7 +32,7 @@ typedef struct
  * @return буффер-источник, куда нужно записать кодированный пакет
  * !Важно: буффер должен быть освобождён в конце.
  */
-void *encodeGuestPacket(ssize_t *, GuestAuthPacket *);
+void *encodeGuestPacket(ssize_t *, GuestAuth *);
 
 /**
  * Конвертирует нативный пакет Packet в протобуфер-пакет.
@@ -47,7 +42,7 @@ void *encodeGuestPacket(ssize_t *, GuestAuthPacket *);
  * @return буффер-источник, куда нужно записать кодированный пакет
  * !Важно: буффер должен быть освобождён в конце.
  */
-void *encodeLoginPacket(ssize_t *, LoginAuthPacket *);
+void *encodeLoginPacket(ssize_t *, LoginAuth *);
 
 /**
  * Пакует пакет в буфер, вычисляет длину пакета

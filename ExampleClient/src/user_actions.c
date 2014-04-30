@@ -2,9 +2,9 @@
 
 short connectAndAuthorize(Client *client)
 {
-	if(client->authorised)
+	if(client->state == authorized)
 		return 1;
-	//loginAuthorize(client->socket, "vasya", "somepass");
-	//guestAuthorize(client->socket);
-	return loginAuthorize(client->socket, "vasya", "somepass");
+	//int res = loginAuthorize(client->socket, "vasya", "somepass");
+	int res = guestAuthorize(client->socket);
+	return res;
 }

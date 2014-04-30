@@ -14,13 +14,21 @@ typedef struct _Header Header;
 
 /* --- enums --- */
 
+typedef enum _Header__PacketType {
+  HEADER__PACKET_TYPE__guest_auth = 1,
+  HEADER__PACKET_TYPE__login_auth = 2,
+  HEADER__PACKET_TYPE__player_packet = 3,
+  HEADER__PACKET_TYPE__error_packet = 4,
+  HEADER__PACKET_TYPE__register_packet = 5
+    _PROTOBUF_C_FORCE_ENUM_TO_BE_INT_SIZE(HEADER__PACKET_TYPE)
+} Header__PacketType;
 
 /* --- messages --- */
 
 struct  _Header
 {
   ProtobufCMessage base;
-  int32_t type;
+  Header__PacketType type;
   int32_t protocol;
   int32_t apiversion;
   ProtobufCBinaryData packet;
@@ -61,6 +69,7 @@ typedef void (*Header_Closure)
 /* --- descriptors --- */
 
 extern const ProtobufCMessageDescriptor header__descriptor;
+extern const ProtobufCEnumDescriptor    header__packet_type__descriptor;
 
 PROTOBUF_C_END_DECLS
 

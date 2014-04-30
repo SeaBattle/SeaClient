@@ -16,7 +16,7 @@ short guestAuthorize(int socket)
 {
 	Packet request;
 	request.header.type = guestAuth;
-	strcpy(request.guestAuthPacket.uid, "user's testUid");
+	strcpy(request.guestAuthPacket.uid, "vasyaUid");
 	return processAuth(&request, socket);
 }
 
@@ -46,29 +46,28 @@ short processAuth(Packet *request, int socket)
 		return -1;
 	}
 
-	Packet responce;
-	if (!recvPacket(&responce, socket))
+	Packet response;
+	if (!recvPacket(&response, socket))
 	{
 		printf("Receiving packet error!\n");
 		return -1;
 	}
 
-	if (responce.header.type == authResp)
-	{ //got authorization packet
-		printf("Packet type = %d, protocol = %d, success = %d\n", responce.header.type, responce.header.protocolVersion,
-		        responce.authRespPacket.success);
-		short authorised = responce.authRespPacket.success;
-		return authorised;
+	if (response.header.type == playerPacket)
+	{ //got player packet (authorization success)
+		printf("Got player packet: %s, level %d, ban %d\n"
+				, response.playersPacket.name, response.playersPacket.level, response.playersPacket.banType);
+		return 1;
 	}
 	else
 	{ //got error packet (probably)
-		if (responce.header.type == error)
+		if (response.header.type == error)
 		{
-			printf("Got error when authorizing: [%d] : %s\n", responce.errorPacket.code, responce.errorPacket.message);
+			printf("Got error when authorizing: [%d] : %s\n", response.errorPacket.code, response.errorPacket.message);
 		}
 		else
 		{
-			printf("Unknown packet type %d!\n", responce.header.type);
+			printf("Unknown packet type %d!\n", response.header.type);
 		}
 		return -1;
 	}

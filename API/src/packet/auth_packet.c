@@ -14,7 +14,7 @@
  * @return буффер-источник, куда нужно записать кодированный пакет
  * !Важно: буффер должен быть освобождён в конце.
  */
-void *encodeGuestPacket(ssize_t *packetLen, GuestAuthPacket *packet)
+void *encodeGuestPacket(ssize_t *packetLen, GuestAuth *packet)
 {
 	AuthPacket authPacket = AUTH_PACKET__INIT;
 	authPacket.uid = packet->uid;
@@ -29,7 +29,7 @@ void *encodeGuestPacket(ssize_t *packetLen, GuestAuthPacket *packet)
  * @return буффер-источник, куда нужно записать кодированный пакет
  * !Важно: буффер должен быть освобождён в конце.
  */
-void *encodeLoginPacket(ssize_t *packetLen, LoginAuthPacket *packet)
+void *encodeLoginPacket(ssize_t *packetLen, LoginAuth *packet)
 {
 	AuthPacket authPacket = AUTH_PACKET__INIT;
 	authPacket.uid = packet->login;

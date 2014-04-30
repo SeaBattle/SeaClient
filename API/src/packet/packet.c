@@ -46,7 +46,9 @@ short decodePacketBody(Header *header, Packet *packet)
 			decodeErrorPacket(&header->packet, &packet->errorPacket);
 			if (!&packet->errorPacket) return 0;
 			break;
-		case authResp:
+		case playerPacket:
+			decodePlayerPacket(&header->packet, &packet->playersPacket);
+			if (!&packet->playersPacket) return 0;
 			break;
 		default:
 			perror("Unknown packet type!");

@@ -50,16 +50,50 @@ void   header__free_unpacked
   PROTOBUF_C_ASSERT (message->base.descriptor == &header__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+const ProtobufCEnumValue header__packet_type__enum_values_by_number[5] =
+{
+  { "guest_auth", "HEADER__PACKET_TYPE__guest_auth", 1 },
+  { "login_auth", "HEADER__PACKET_TYPE__login_auth", 2 },
+  { "player_packet", "HEADER__PACKET_TYPE__player_packet", 3 },
+  { "error_packet", "HEADER__PACKET_TYPE__error_packet", 4 },
+  { "register_packet", "HEADER__PACKET_TYPE__register_packet", 5 },
+};
+static const ProtobufCIntRange header__packet_type__value_ranges[] = {
+{1, 0},{0, 5}
+};
+const ProtobufCEnumValueIndex header__packet_type__enum_values_by_name[5] =
+{
+  { "error_packet", 3 },
+  { "guest_auth", 0 },
+  { "login_auth", 1 },
+  { "player_packet", 2 },
+  { "register_packet", 4 },
+};
+const ProtobufCEnumDescriptor header__packet_type__descriptor =
+{
+  PROTOBUF_C_ENUM_DESCRIPTOR_MAGIC,
+  "Header.PacketType",
+  "PacketType",
+  "Header__PacketType",
+  "",
+  5,
+  header__packet_type__enum_values_by_number,
+  5,
+  header__packet_type__enum_values_by_name,
+  1,
+  header__packet_type__value_ranges,
+  NULL,NULL,NULL,NULL   /* reserved[1234] */
+};
 static const ProtobufCFieldDescriptor header__field_descriptors[4] =
 {
   {
     "type",
     1,
     PROTOBUF_C_LABEL_REQUIRED,
-    PROTOBUF_C_TYPE_INT32,
+    PROTOBUF_C_TYPE_ENUM,
     0,   /* quantifier_offset */
     PROTOBUF_C_OFFSETOF(Header, type),
-    NULL,
+    &header__packet_type__descriptor,
     NULL,
     0,            /* packed */
     0,NULL,NULL    /* reserved1,reserved2, etc */

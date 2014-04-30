@@ -14,10 +14,13 @@ set (API_SOURCE
 	${PROJECT_SOURCE_DIR}/client.c
 	${PROJECT_SOURCE_DIR}/packet/packet.c
 	${PROJECT_SOURCE_DIR}/packet/auth_packet.c
+	${PROJECT_SOURCE_DIR}/packet/player_packet.c
 	${PROJECT_SOURCE_DIR}/packet/service_packet.c
 	${PROJECT_SOURCE_DIR}/packet/gen/ss_packet_header.pb-c.c
 	${PROJECT_SOURCE_DIR}/packet/gen/ss_auth_packet.pb-c.c
 	${PROJECT_SOURCE_DIR}/packet/gen/ss_error_packet.pb-c.c
+	${PROJECT_SOURCE_DIR}/packet/gen/ss_player_packet.pb-c.c
+	${PROJECT_SOURCE_DIR}/packet/gen/ss_ships_packet.pb-c.c
 	)
 
 include_directories (${PROJECT_INCLUDE_DIR})

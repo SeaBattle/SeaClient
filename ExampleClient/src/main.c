@@ -26,7 +26,7 @@ int main()
 	switch (connectAndAuthorize(client))
 	{
 		case 1:
-			client->authorised = 1;
+			client->state = authorized;
 			printf("Authorized.\n");
 			break;
 		case 0:

@@ -50,6 +50,49 @@ void   auth_packet__free_unpacked
   PROTOBUF_C_ASSERT (message->base.descriptor == &auth_packet__descriptor);
   protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
 }
+void   register_packet__init
+                     (RegisterPacket         *message)
+{
+  static RegisterPacket init_value = REGISTER_PACKET__INIT;
+  *message = init_value;
+}
+size_t register_packet__get_packed_size
+                     (const RegisterPacket *message)
+{
+  PROTOBUF_C_ASSERT (message->base.descriptor == &register_packet__descriptor);
+  return protobuf_c_message_get_packed_size ((const ProtobufCMessage*)(message));
+}
+size_t register_packet__pack
+                     (const RegisterPacket *message,
+                      uint8_t       *out)
+{
+  PROTOBUF_C_ASSERT (message->base.descriptor == &register_packet__descriptor);
+  return protobuf_c_message_pack ((const ProtobufCMessage*)message, out);
+}
+size_t register_packet__pack_to_buffer
+                     (const RegisterPacket *message,
+                      ProtobufCBuffer *buffer)
+{
+  PROTOBUF_C_ASSERT (message->base.descriptor == &register_packet__descriptor);
+  return protobuf_c_message_pack_to_buffer ((const ProtobufCMessage*)message, buffer);
+}
+RegisterPacket *
+       register_packet__unpack
+                     (ProtobufCAllocator  *allocator,
+                      size_t               len,
+                      const uint8_t       *data)
+{
+  return (RegisterPacket *)
+     protobuf_c_message_unpack (&register_packet__descriptor,
+                                allocator, len, data);
+}
+void   register_packet__free_unpacked
+                     (RegisterPacket *message,
+                      ProtobufCAllocator *allocator)
+{
+  PROTOBUF_C_ASSERT (message->base.descriptor == &register_packet__descriptor);
+  protobuf_c_message_free_unpacked ((ProtobufCMessage*)message, allocator);
+}
 static const ProtobufCFieldDescriptor auth_packet__field_descriptors[2] =
 {
   {
@@ -99,5 +142,95 @@ const ProtobufCMessageDescriptor auth_packet__descriptor =
   auth_packet__field_indices_by_name,
   1,  auth_packet__number_ranges,
   (ProtobufCMessageInit) auth_packet__init,
+  NULL,NULL,NULL    /* reserved[123] */
+};
+static const ProtobufCFieldDescriptor register_packet__field_descriptors[5] =
+{
+  {
+    "login",
+    1,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(RegisterPacket, login),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "password",
+    2,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(RegisterPacket, password),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "name",
+    3,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(RegisterPacket, name),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "icon_url",
+    4,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(RegisterPacket, icon_url),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "motto",
+    5,
+    PROTOBUF_C_LABEL_OPTIONAL,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(RegisterPacket, motto),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+};
+static const unsigned register_packet__field_indices_by_name[] = {
+  3,   /* field[3] = icon_url */
+  0,   /* field[0] = login */
+  4,   /* field[4] = motto */
+  2,   /* field[2] = name */
+  1,   /* field[1] = password */
+};
+static const ProtobufCIntRange register_packet__number_ranges[1 + 1] =
+{
+  { 1, 0 },
+  { 0, 5 }
+};
+const ProtobufCMessageDescriptor register_packet__descriptor =
+{
+  PROTOBUF_C_MESSAGE_DESCRIPTOR_MAGIC,
+  "register_packet",
+  "RegisterPacket",
+  "RegisterPacket",
+  "",
+  sizeof(RegisterPacket),
+  5,
+  register_packet__field_descriptors,
+  register_packet__field_indices_by_name,
+  1,  register_packet__number_ranges,
+  (ProtobufCMessageInit) register_packet__init,
   NULL,NULL,NULL    /* reserved[123] */
 };

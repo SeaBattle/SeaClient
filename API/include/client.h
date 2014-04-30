@@ -9,6 +9,7 @@
 #define CLIENT_H_
 
 #include "net.h"
+#include "player_packet.h"
 
 typedef enum
 {
@@ -20,9 +21,11 @@ typedef enum
 
 typedef struct
 {
-	State state;
-	int socket;
-	short authorised;
+		State state;
+		int socket;
+		Player player;
+		//TODO wall
+		//TODO ships
 } Client;
 
 //отправляет пакет на сервер. Возвращает 0 в случае ошибки
