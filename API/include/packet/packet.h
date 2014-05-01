@@ -25,7 +25,7 @@ typedef enum
 	loginAuth,		//2
 	playerPacket, 		//3
 	error,			//4
-	registerPacket	//5
+	registerP	//5
 } PacketType;
 
 //заголовок пакета
@@ -46,7 +46,8 @@ typedef struct
 				GuestAuth guestAuthPacket;	//type 1
 				LoginAuth loginAuthPacket; 	//type 2
 				Player playersPacket;		//type 3
-				Error errorPacket;					//type 4
+				Error errorPacket;			//type 4
+				Register registerPacket; 	//type 5
 		};
 } Packet;
 

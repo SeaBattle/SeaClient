@@ -78,13 +78,11 @@ NetPacket *encode(Packet *packet)
 	header.type = packet->header.type;
 	header.apiversion = API_VERSION;
 	header.protocol = PROTOCOL_VERSION;
-
 	//attach binary tail to header
 	ProtobufCBinaryData data = encodePacketBody(packet);
 	if(!data.data)
 		return NULL;
 	header.packet = data;
-
 	//compose and return packet
 	return composePacket(&header);
 }

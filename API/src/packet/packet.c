@@ -25,6 +25,9 @@ ProtobufCBinaryData encodePacketBody(Packet *packet)
 		case loginAuth:
 			bodyRaw = encodeLoginPacket(&len, &packet->loginAuthPacket);
 			break;
+		case registerP:
+			bodyRaw = encodeRegisterPacket(&len, &packet->registerPacket);
+			break;
 		default:
 			perror("Unknown packet type!");
 			data.data = NULL;
@@ -33,7 +36,7 @@ ProtobufCBinaryData encodePacketBody(Packet *packet)
 
 	//create and fill binary tail
 	data.len = len;
-	data.data = bodyRaw;	//is freed here, on line 74
+	data.data = bodyRaw;	//is freed here, on line 83
 	return data;
 }
 

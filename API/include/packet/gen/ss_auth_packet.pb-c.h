@@ -34,13 +34,14 @@ struct  _RegisterPacket
   ProtobufCMessage base;
   char *login;
   char *password;
+  char *uid;
   char *name;
   char *icon_url;
   char *motto;
 };
 #define REGISTER_PACKET__INIT \
  { PROTOBUF_C_MESSAGE_INIT (&register_packet__descriptor) \
-    , NULL, NULL, NULL, NULL, NULL }
+    , NULL, NULL, NULL, NULL, NULL, NULL }
 
 
 /* AuthPacket methods */

@@ -14,13 +14,10 @@ short sendPacket(Packet *packet, int socket)
 	NetPacket *rawPacket = encode(packet);
 	if(!rawPacket)
 		return 0;
-
 	//send buffer
 	short result = sendData(rawPacket, socket);
-
 	//free buffers
 	freePacket(rawPacket);
-
 	return result;
 }
 

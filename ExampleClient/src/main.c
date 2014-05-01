@@ -23,7 +23,7 @@ int main()
 	}
 	printf("Connected to %s : %d\n", listenAdress, listenPort);
 
-	switch (connectAndAuthorize(client))
+	switch (registerOnServer(client))
 	{
 		case 1:
 			client->state = authorized;

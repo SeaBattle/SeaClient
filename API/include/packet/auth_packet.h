@@ -10,6 +10,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
+#include <string.h>
 
 #include "ss_auth_packet.pb-c.h"
 
@@ -23,6 +24,15 @@ typedef struct
 		char login[30];
 		char password[30];
 } LoginAuth;
+
+typedef struct
+{
+		LoginAuth loginData;
+		char uid[30];
+		char name[30];
+		char icon[100];
+		char motto[100];
+}Register;
 
 /**
  * Конвертирует нативный пакет Packet в протобуфер-пакет.
@@ -50,5 +60,15 @@ void *encodeLoginPacket(ssize_t *, LoginAuth *);
  * @param authPacket
  */
 void *encodeAuthPacket(ssize_t *, AuthPacket *);
+
+/**
+ * Конвертирует нативный пакет Packet в протобуфер-пакет.
+ * Кодирует протобуфер-пакет в буфер.
+ * @packetLen указатель на длину кодированного пакета. Будет заполнена после определения длины.
+ * @packet пакет, который нужно закодировать
+ * @return буффер-источник, куда нужно записать кодированный пакет
+ * !Важно: буффер должен быть освобождён в конце.
+ */
+void *encodeRegisterPacket(ssize_t *, Register *);
 
 #endif /* AUTH_PACKETS_H_ */

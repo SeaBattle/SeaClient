@@ -21,7 +21,7 @@ typedef enum
 	privat_ban,
 	social_ban,
 	login_ban
-}BanType;
+} BanType;
 
 typedef struct
 {
@@ -31,6 +31,26 @@ typedef struct
 		char name[30];
 		char icon[100];
 } Player;
+
+typedef struct
+{
+		char name[30];
+		char description[100];
+}Reward;
+
+typedef struct
+{
+		//TODO fill
+} Statistics;
+
+typedef struct
+{
+		char motto[100];
+		Reward rewards[100];
+		long created;
+		long rate;
+		Statistics statistics[100]; //TODO рассчитать кол-во статистики - макс. кол-во комбинаций правил
+} Wall;
 
 /**
  * Декодирует двоичные данные в протобуфер-пакет.

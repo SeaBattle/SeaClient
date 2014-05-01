@@ -11,6 +11,12 @@
 #include "client.h"
 #include "auth.h"
 
-short connectAndAuthorize(Client *client);
+#define UIDSIZE 30
+
+short connectAndAuthorize(Client *);
+
+short registerOnServer(Client *);
+
+void getUid(char *uid);
 
 #endif /* USER_ACTIONS_H_ */

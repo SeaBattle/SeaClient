@@ -144,7 +144,7 @@ const ProtobufCMessageDescriptor auth_packet__descriptor =
   (ProtobufCMessageInit) auth_packet__init,
   NULL,NULL,NULL    /* reserved[123] */
 };
-static const ProtobufCFieldDescriptor register_packet__field_descriptors[5] =
+static const ProtobufCFieldDescriptor register_packet__field_descriptors[6] =
 {
   {
     "login",
@@ -171,8 +171,20 @@ static const ProtobufCFieldDescriptor register_packet__field_descriptors[5] =
     0,NULL,NULL    /* reserved1,reserved2, etc */
   },
   {
-    "name",
+    "uid",
     3,
+    PROTOBUF_C_LABEL_REQUIRED,
+    PROTOBUF_C_TYPE_STRING,
+    0,   /* quantifier_offset */
+    PROTOBUF_C_OFFSETOF(RegisterPacket, uid),
+    NULL,
+    NULL,
+    0,            /* packed */
+    0,NULL,NULL    /* reserved1,reserved2, etc */
+  },
+  {
+    "name",
+    4,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
@@ -184,7 +196,7 @@ static const ProtobufCFieldDescriptor register_packet__field_descriptors[5] =
   },
   {
     "icon_url",
-    4,
+    5,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
@@ -196,7 +208,7 @@ static const ProtobufCFieldDescriptor register_packet__field_descriptors[5] =
   },
   {
     "motto",
-    5,
+    6,
     PROTOBUF_C_LABEL_OPTIONAL,
     PROTOBUF_C_TYPE_STRING,
     0,   /* quantifier_offset */
@@ -208,16 +220,17 @@ static const ProtobufCFieldDescriptor register_packet__field_descriptors[5] =
   },
 };
 static const unsigned register_packet__field_indices_by_name[] = {
-  3,   /* field[3] = icon_url */
+  4,   /* field[4] = icon_url */
   0,   /* field[0] = login */
-  4,   /* field[4] = motto */
-  2,   /* field[2] = name */
+  5,   /* field[5] = motto */
+  3,   /* field[3] = name */
   1,   /* field[1] = password */
+  2,   /* field[2] = uid */
 };
 static const ProtobufCIntRange register_packet__number_ranges[1 + 1] =
 {
   { 1, 0 },
-  { 0, 5 }
+  { 0, 6 }
 };
 const ProtobufCMessageDescriptor register_packet__descriptor =
 {
@@ -227,7 +240,7 @@ const ProtobufCMessageDescriptor register_packet__descriptor =
   "RegisterPacket",
   "",
   sizeof(RegisterPacket),
-  5,
+  6,
   register_packet__field_descriptors,
   register_packet__field_indices_by_name,
   1,  register_packet__number_ranges,
